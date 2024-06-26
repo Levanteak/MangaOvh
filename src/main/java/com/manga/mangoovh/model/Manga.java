@@ -47,4 +47,6 @@ public class Manga {
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Chapter> chapters = new HashSet<>();
+    @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<MangaTitleImage> titleImages = new HashSet<>();
 }

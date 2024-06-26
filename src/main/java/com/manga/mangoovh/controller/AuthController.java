@@ -5,6 +5,7 @@ import com.manga.mangoovh.config.dto.ResponseDTO;
 import com.manga.mangoovh.config.infra.security.TokenService;
 import com.manga.mangoovh.model.Role;
 import com.manga.mangoovh.model.User;
+import com.manga.mangoovh.model.enums.ERole;
 import com.manga.mangoovh.repository.RoleRepository;
 import com.manga.mangoovh.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -52,46 +54,32 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @ModelAttribute RegisterRequestDTO requestDTO) {
-        try {
-            Optional<User> existingUser = userRepository.findByUsername(requestDTO.username());
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO requestDTO) {
+        Optional<User> existingUser = userRepository.findByUsername(requestDTO.username());
 
-            if (existingUser.isPresent()) {
-                return ResponseEntity
-                        .badRequest()
-                        .body(new ResponseDTO("Username already exists", null));
-            }
-
-            User newUser = new User();
-            newUser.setUsername(requestDTO.username());
-            newUser.setPassword(passwordEncoder.encode(requestDTO.password()));
-            newUser.setEmail(requestDTO.email());
-            newUser.setDescription(requestDTO.description());
-            newUser.setRating(5L);
-
-            if (requestDTO.avatar() != null && !requestDTO.avatar().isEmpty()) {
-                byte[] avatarBytes = requestDTO.avatar().getBytes();
-                newUser.setAvatar(avatarBytes);
-            }
-
-            newUser.setDateCreate(LocalDateTime.now());
-
-            Set<Role> roles = new HashSet<>();
-            for (Role role : requestDTO.role()) {
-                Role existingRole = roleRepository.findByName(role.getName())
-                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                roles.add(existingRole);
-            }
-            newUser.setRoles(roles);
-
-            userRepository.save(newUser);
-
-            String token = tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), token));
-        } catch (IOException ex) {
+        if (existingUser.isPresent()) {
             return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResponseDTO("Failed to upload avatar", null));
+                    .badRequest()
+                    .body(new ResponseDTO("Username already exists", null));
         }
+
+        User newUser = new User();
+        newUser.setUsername(requestDTO.username());
+        newUser.setPassword(passwordEncoder.encode(requestDTO.password()));
+        newUser.setEmail(requestDTO.email());
+        newUser.setDescription(requestDTO.description());
+        newUser.setRating(5L);
+        newUser.setDateCreate(LocalDateTime.now());
+
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: ROLE_USER is not found."));
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+        newUser.setRoles(roles);
+
+        userRepository.save(newUser);
+
+        String token = tokenService.generateToken(newUser);
+        return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), token));
     }
 }

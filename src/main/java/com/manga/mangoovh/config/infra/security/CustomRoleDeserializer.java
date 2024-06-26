@@ -20,7 +20,6 @@ public class CustomRoleDeserializer extends JsonDeserializer<Set<Role>> {
         for (String roleName : roleNames) {
             roles.add(new Role(ERole.valueOf(roleName)));
         }
-
         return roles;
     }
 }

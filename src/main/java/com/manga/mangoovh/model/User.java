@@ -28,8 +28,9 @@ public class User {
     @Column(name = "date_create", nullable = false, updatable = false)
     private LocalDateTime dateCreate;
     private Long rating;
-    @Lob
-    private byte[] avatar;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "avatar_id")
+    private Avatar avatar;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -1,13 +1,13 @@
 package com.manga.mangoovh.service.Impl;
 
-import com.manga.mangoovh.model.User;
+import com.manga.mangoovh.DTO.UserDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ImplUser {
-    void updateExistingUser(User existingUser, User newUser);
-    List<User> getAllUsers();
+    void updateExistingUser(UserDTO existingUser, UserDTO newUserDTO);
+    List<UserDTO> getAllUsersDTO();
     void deleteUser(long userId);
-    Optional<User> getUserByUsername (String username);
+    Optional<UserDTO> getUserDTOByUsername(String username);
 }

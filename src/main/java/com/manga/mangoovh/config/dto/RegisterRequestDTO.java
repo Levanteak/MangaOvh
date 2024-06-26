@@ -26,7 +26,5 @@ public record RegisterRequestDTO (
         String description,
 
         @JsonDeserialize(using = CustomRoleDeserializer.class)
-        Set<Role> role,
-
-        MultipartFile avatar
+        Set<Role> role
 ) {}

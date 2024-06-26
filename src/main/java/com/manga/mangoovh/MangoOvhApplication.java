@@ -14,12 +14,5 @@ public class MangoOvhApplication {
     public static void main(String[] args) {
         SpringApplication.run(MangoOvhApplication.class, args);
     }
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder, DataSource dataSource) {
-        return builder
-                .dataSource(dataSource)
-                .packages("com.manga.mangoovh.model")
-                .persistenceUnit("mangoovhPU")
-                .build();
-    }
+
 }
