@@ -10,4 +10,5 @@ public interface ImplUser {
     List<UserDTO> getAllUsersDTO();
     void deleteUser(long userId);
     Optional<UserDTO> getUserDTOByUsername(String username);
+    void addAvatarToUser(Long userId, byte[] avatar);
 }

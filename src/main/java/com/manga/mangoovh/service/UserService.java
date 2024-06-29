@@ -1,12 +1,14 @@
 package com.manga.mangoovh.service;
 
+import com.manga.mangoovh.DTO.UserAvatarDTO;
 import com.manga.mangoovh.DTO.UserDTO;
+import com.manga.mangoovh.model.Avatar;
 import com.manga.mangoovh.model.User;
 import com.manga.mangoovh.repository.UserRepository;
 import com.manga.mangoovh.service.Impl.ImplUser;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,7 @@ public class UserService implements ImplUser {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     @Override
     public void updateExistingUser(UserDTO existingUserDTO, UserDTO newUserDTO) {
@@ -55,6 +58,32 @@ public class UserService implements ImplUser {
     public Optional<UserDTO> getUserDTOByUsername(String username) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.map(this::convertToUserDTO);
+    }
+    @Transactional
+    @Override
+    public void addAvatarToUser(Long userId, byte[] avatar) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            Avatar userAvatar = new Avatar();
+            userAvatar.setAvatar(avatar);
+            user.setAvatar(userAvatar);
+            userAvatar.setUser(user);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
+    }
+    public Optional<UserAvatarDTO> getUserAvatarDTOByUserId(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.map(this::convertToUserAvatarDTO);
+    }
+
+
+    private UserAvatarDTO convertToUserAvatarDTO (User user){
+        UserAvatarDTO userAvatarDTO = new UserAvatarDTO();
+        userAvatarDTO.setAvatar(user.getAvatar());
+        return userAvatarDTO;
     }
 
     private UserDTO convertToUserDTO(User user) {
