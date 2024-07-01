@@ -3,9 +3,14 @@ package com.manga.mangoovh.controller;
 import com.manga.mangoovh.config.dto.LoginRequestDTO;
 import com.manga.mangoovh.config.dto.ResponseDTO;
 import com.manga.mangoovh.config.infra.security.TokenService;
+import com.manga.mangoovh.model.Folder;
+import com.manga.mangoovh.model.FolderCategory;
 import com.manga.mangoovh.model.Role;
 import com.manga.mangoovh.model.User;
+import com.manga.mangoovh.model.enums.EFolderCategory;
 import com.manga.mangoovh.model.enums.ERole;
+import com.manga.mangoovh.repository.FolderCategoryRepository;
+import com.manga.mangoovh.repository.FolderRepository;
 import com.manga.mangoovh.repository.RoleRepository;
 import com.manga.mangoovh.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,9 +40,11 @@ import java.util.Set;
 public class AuthController {
 
     private final UserRepository userRepository;
+    private final FolderRepository folderRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final RoleRepository roleRepository;
+    private final FolderCategoryRepository folderCategoryRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO body) {
@@ -79,7 +86,21 @@ public class AuthController {
 
         userRepository.save(newUser);
 
+        createFoldersForUser(newUser);
+
         String token = tokenService.generateToken(newUser);
         return ResponseEntity.ok(new ResponseDTO(newUser.getUsername(), token));
+    }
+
+    private void createFoldersForUser(User user) {
+        EFolderCategory[] folderCategories = EFolderCategory.values();
+        for (EFolderCategory category : folderCategories) {
+            Folder folder = new Folder();
+            FolderCategory folderCategory = folderCategoryRepository.findByName(category)
+                    .orElseThrow(() -> new RuntimeException("Error: Category not found."));
+            folder.setFolderCategory(folderCategory);
+            folder.setUser(user);
+            folderRepository.save(folder);
+        }
     }
 }

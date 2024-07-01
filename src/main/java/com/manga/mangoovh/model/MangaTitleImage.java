@@ -9,6 +9,7 @@ import lombok.Data;
 public class MangaTitleImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "manga_title_images_id")
     private Long id;
 
     @Lob

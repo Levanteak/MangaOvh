@@ -1,8 +1,10 @@
 package com.manga.mangoovh.controller;
 
 
+import com.manga.mangoovh.DTO.MangaDTO;
 import com.manga.mangoovh.DTO.UserAvatarDTO;
 import com.manga.mangoovh.DTO.UserDTO;
+import com.manga.mangoovh.model.Manga;
 import com.manga.mangoovh.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +69,7 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{userId}/avatar")
+    @PostMapping("/avatar/{userId}")
     public ResponseEntity<String> uploadAvatar(@PathVariable Long userId, @RequestParam("file") MultipartFile file) {
         try {
             userService.addAvatarToUser(userId, file.getBytes());
@@ -75,5 +77,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar: " + e.getMessage());
         }
+    }
+
+    @PostMapping("/{userId}/mangas")
+    public ResponseEntity<MangaDTO> addMangaToUser(@PathVariable Long userId, @RequestBody MangaDTO mangaDTO) {
+        MangaDTO manga = userService.addMangaToUser(userId, mangaDTO);
+        return ResponseEntity.ok(manga);
     }
 }

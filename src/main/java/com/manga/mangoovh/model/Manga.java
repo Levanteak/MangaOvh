@@ -18,6 +18,7 @@ import java.util.Set;
 public class Manga {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "manga_id")
     private Long id;
     private String title;
     private String description;

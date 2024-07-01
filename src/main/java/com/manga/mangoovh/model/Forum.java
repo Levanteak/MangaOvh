@@ -14,6 +14,7 @@ import java.util.Set;
 public class Forum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "forum_id")
     private Long id;
     private String title;
     private String content;

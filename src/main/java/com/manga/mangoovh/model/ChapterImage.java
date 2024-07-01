@@ -9,6 +9,7 @@ import lombok.Data;
 public class ChapterImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chapter_images_id")
     private Long id;
 
     @Lob

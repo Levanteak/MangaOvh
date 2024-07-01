@@ -14,6 +14,7 @@ import java.util.List;
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chapter_id")
     private Long id;
 
     private String title;

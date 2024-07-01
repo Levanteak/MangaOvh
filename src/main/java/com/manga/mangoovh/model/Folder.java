@@ -13,11 +13,12 @@ import java.util.Set;
 public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "folder_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private EFolderCategory name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "folder_category_id")
+    private FolderCategory folderCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
