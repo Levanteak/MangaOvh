@@ -1,6 +1,5 @@
 package com.manga.mangoovh.DTO;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.manga.mangoovh.model.enums.EMangaStatus;
 import lombok.Data;
 import com.manga.mangoovh.model.enums.EContentRating;
@@ -18,17 +17,10 @@ public class MangaDTO {
     private int likes;
     private double rating;
     private int bookmarks;
-    @JsonProperty("EGenre")
-    private EGenre egenre;
-
-    @JsonProperty("ECountry")
-    private ECountry ecountry;
-
-    @JsonProperty("EContentRating")
-    private EContentRating econtentRating;
-
-    @JsonProperty("status")
+    private EGenre EGenre;
+    private ECountry ECountry;
+    private EContentRating EContentRating;
     private EMangaStatus status;
     private LocalDateTime createdAt;
-    private UserToMangaDTO user;
+    private MangaUserDTO user;
 }

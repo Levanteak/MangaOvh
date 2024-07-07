@@ -1,5 +1,6 @@
 package com.manga.mangoovh.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.manga.mangoovh.model.enums.EContentRating;
 import com.manga.mangoovh.model.enums.ECountry;
 import com.manga.mangoovh.model.enums.EGenre;
@@ -43,7 +44,7 @@ public class Manga {
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
