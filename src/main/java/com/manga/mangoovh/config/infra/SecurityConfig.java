@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/mangas/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic()

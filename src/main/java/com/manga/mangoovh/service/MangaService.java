@@ -36,7 +36,6 @@ public class MangaService implements ImplMangaService {
     public MangaDTO updateManga(Long mangaId, Manga mangaRequest) {
         Manga existingManga = mangaRepository.findById(mangaId)
                 .orElseThrow(() -> new RuntimeException("Manga not found with id " + mangaId));
-
         existingManga.setTitle(mangaRequest.getTitle());
         existingManga.setDescription(mangaRequest.getDescription());
         existingManga.setViews(mangaRequest.getViews());
@@ -57,16 +56,12 @@ public class MangaService implements ImplMangaService {
 
         return toDto(manga);
     }
-
     public List<MangaDTO> getAllMangas() {
         List<Manga> mangas = mangaRepository.findAll();
         return mangas.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
-
-
-
     private MangaDTO toDto(Manga manga) {
         if (manga == null) {
             return null;

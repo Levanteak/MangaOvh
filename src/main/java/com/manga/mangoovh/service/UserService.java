@@ -2,6 +2,7 @@ package com.manga.mangoovh.service;
 
 import com.manga.mangoovh.DTO.MangaUserDTO;
 import com.manga.mangoovh.DTO.UserDTO;
+import com.manga.mangoovh.DTO.UserDetailsDTO;
 import com.manga.mangoovh.model.Avatar;
 import com.manga.mangoovh.model.User;
 import com.manga.mangoovh.repository.UserRepository;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,6 +68,40 @@ public class UserService implements ImplUserService {
         }
 
         return userDTO;
+    }
+
+    public UserDetailsDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        return convertToUserDetailsDTO(user);
+    }
+
+    public UserDetailsDTO getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+        return convertToUserDetailsDTO(user);
+    }
+
+    public List<UserDetailsDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(this::convertToUserDetailsDTO).collect(Collectors.toList());
+    }
+
+    private UserDetailsDTO convertToUserDetailsDTO(User user) {
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
+        userDetailsDTO.setUserId(user.getUserId());
+        userDetailsDTO.setUsername(user.getUsername());
+        userDetailsDTO.setEmail(user.getEmail());
+        userDetailsDTO.setDescription(user.getDescription());
+        userDetailsDTO.setDateCreate(user.getDateCreate());
+        userDetailsDTO.setRating(user.getRating());
+        userDetailsDTO.setAvatar(user.getAvatar());
+        userDetailsDTO.setRoles(user.getRoles());
+        userDetailsDTO.setMangas(user.getMangas());
+        userDetailsDTO.setFolders(user.getFolders());
+        userDetailsDTO.setForums(user.getForums());
+        userDetailsDTO.setComments(user.getComments());
+        return userDetailsDTO;
     }
     @Override
     public void deleteUser(long userId) {
